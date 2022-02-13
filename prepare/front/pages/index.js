@@ -2,8 +2,8 @@ import Applayout from './../components/Applayout';
 
 const Home = () =>{
     return(
-        <Applayout>Hello World</Applayout>
+        <Applayout>Hello Worldssss</Applayout>
     );
 };
 
-export default Homse;
+export default Home;
