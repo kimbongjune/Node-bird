@@ -1,15 +1,45 @@
 import PropTypes from "prop-types";
 import Link from "next/link";
+import { Menu, Input, Row, Col } from "antd";
+import { useState } from "react";
+import styled from "styled-components";
+
+import UserProfile from "../components/UserProfile";
+import Loginform from "../components/Loginform";
+
+const SearchInput = styled(Input.Search)`
+    vertical-align : middle;
+`;
 
 const Applayout = ({children}) =>{
+    const [isLogged, setIsLogged] = useState(false);
     return(
         <div>
-            <div>
-                <Link href="/"><a>노드버드</a></Link>
-                <Link href="/profile"><a>프로필</a></Link>
-                <Link href="/signup"><a>회원가입</a></Link>
-            </div>
-            {children}
+            <Menu mode="horizontal">
+                <Menu.Item>
+                    <Link href="/"><a>노드버드</a></Link>
+                </Menu.Item>
+                <Menu.Item>
+                    <Link href="/profile"><a>프로필</a></Link>
+                </Menu.Item>
+                <Menu.Item>
+                    <SearchInput enterButton></SearchInput>
+                </Menu.Item>
+                <Menu.Item>
+                    <Link href="/signup"><a>회원가입</a></Link>
+                </Menu.Item>
+            </Menu>
+            <Row gutter={8}>
+                <Col xs={24} md={6}>
+                    {isLogged ? <UserProfile/> : <Loginform/>}
+                </Col>
+                <Col xs={24} md={12}>
+                    {children}
+                </Col>
+                <Col xs={24} md={6}>
+                    <a href="http://www.naver.com" target="_blank" rel="noreferrer noopener">네이버</a>
+                </Col>
+            </Row>
         </div>
     );
 };
