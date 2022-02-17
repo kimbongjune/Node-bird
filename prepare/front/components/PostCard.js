@@ -8,7 +8,6 @@ import PostImages from "./PostImages";
 
 const PostCard = ({post}) =>{
     const [liked, setLiked] = useState(false);
-    console.log("test");
     const [commentFromOpened, setCommentFromOpened] = useState(false);
     const onToggleLike = useCallback(()=>{
         setLiked((prev) => !prev);
