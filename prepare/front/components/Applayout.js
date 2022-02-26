@@ -27,7 +27,7 @@ const SearchInput = styled(Input.Search)`
 `;
 
 const Applayout = ({children}) =>{
-    const isLogged = useSelector((state) => state.user.isLoggedIn);
+    const { me } = useSelector((state) => state.user);
     return(
         <div>
             <Global/>
@@ -47,7 +47,7 @@ const Applayout = ({children}) =>{
             </Menu>
             <Row gutter={8}>
                 <Col xs={24} md={6}>
-                    {isLogged ? <UserProfile/> : <Loginform/>}
+                    {me ? <UserProfile/> : <Loginform/>}
                 </Col>
                 <Col xs={24} md={12}>
                     {children}

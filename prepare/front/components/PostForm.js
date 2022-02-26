@@ -1,27 +1,32 @@
 import { Button, Form, Input } from "antd";
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addPost } from "../reducers/post";
 
 const PostForm = () =>{
 
-    const {imagePaths} = useSelector((state) => state.post);
+    const {imagePaths, addPostDone} = useSelector((state) => state.post);
     const dispatch = useDispatch();
-    const imageInput = useRef();
-    const [text, setText] = useState("");
-    const onChageText = useCallback((e) =>{
-        setText(e.target.value);
-    }, [])
+    const [text, onChangeText, setText] = useInput("");
+
+    useEffect(() =>{
+        if(addPostDone){
+            setText("");
+        }
+    }, [addPostDone])
+
     const onSubmit = useCallback(() =>{
-        dispatch(addPost);
+        dispatch(addPost(text));
         setText("");
-    }, [])
+    }, [text])
+
+    const imageInput = useRef();
     const onClickImageUpload = useCallback(()=>{
         imageInput.current.click();
     }, [imageInput.current])
     return(
         <Form style={{margin : "10px 0 20px"}} encType="multipart/form-data" onFinish={onSubmit}> 
-            <Input.TextArea value={text} onChange={onChageText} maxLength={140} placeholder="어떤 신기한 일이 있었나요?"/>
+            <Input.TextArea value={text} onChange={onChangeText} maxLength={140} placeholder="어떤 신기한 일이 있었나요?"/>
             <div>
                 <input type="file" multiple hidden ref={imageInput}/>
                 <Button onClick={onClickImageUpload}>이미지 업로드</Button>
