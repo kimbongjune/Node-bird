@@ -1,5 +1,5 @@
 import {Form, Input, Button} from "antd";
-import { useCallback } from 'react';
+import { useCallback,useEffect } from 'react';
 import useInput from "../hooks/useInput";
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,13 +9,13 @@ const CommentForm = ({post}) =>{
     const dispatch = useDispatch();
     const [commentText, onChangeCommentText, setCommentText] = useInput("");
     const id = useSelector((state) => state.user.me?.id);
-    const { addPostCommentDone } = useSelector((state) => state.post);
+    const { addCommentDone, addCommentLoading } = useSelector((state) => state.post);
 
     useEffect(() =>{
-        if(addPostCommentDone){
+        if(addCommentDone){
             setCommentText("");
         }
-    }, [addPostCommentDone])
+    }, [addCommentDone])
 
     const onSubmitComment = useCallback(() =>{
 
@@ -33,7 +33,7 @@ const CommentForm = ({post}) =>{
         <Form onFinish={onSubmitComment}>
             <Form.Item>
                 <Input.TextArea value={commentText} onChange={onChangeCommentText} rows={4}/>
-                <Button type="primary" htmlType="submit">삐약</Button>
+                <Button style={{position:"absolute", right : 0, bottom : -40, zIndex : 1}} loading={addCommentLoading} type="primary" htmlType="submit">삐약</Button>
             </Form.Item>
         </Form>
     )

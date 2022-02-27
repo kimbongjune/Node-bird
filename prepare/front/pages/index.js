@@ -6,7 +6,7 @@ import Head from "next/head";
 import { useSelector } from 'react-redux';
 
 const Home = () =>{
-    const {isLoggedIn} = useSelector((state) => state.user);
+    const {me} = useSelector((state) => state.user);
     const {mainPosts} = useSelector((state) => state.post);
     return(
         <>
@@ -14,7 +14,7 @@ const Home = () =>{
                 <title>NodeBird</title>
             </Head>
             <Applayout>
-                {isLoggedIn && <PostForm/>}
+                {me && <PostForm/>}
                 {mainPosts.map((post, index) => <PostCard key={post.id} post={post}/>)}
             </Applayout>
         </>
