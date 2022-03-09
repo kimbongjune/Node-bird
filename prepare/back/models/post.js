@@ -5,12 +5,12 @@ module.exports = (sequelize, DataTypes) =>{
             allowNull : false,
         },
     },{
-        charset : "utf8",
+        charset : "utf8mb4",
         collate : "utf8mb4_general_ci",
     });
     Post.associate = (db) =>{
         db.Post.belongsTo(db.User);
-        db.Post.belongsToMany(db.Hashtag);
+        db.Post.belongsToMany(db.Hashtag, { through : "PostHashtag" });
         db.Post.hasMany(db.Comment);
         db.Post.hasMany(db.Image);
         db.Post.belongsTo(db.User, { as : "Retweet " });
