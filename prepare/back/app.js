@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
 const db = require("./models");
@@ -29,6 +30,10 @@ app.get("/posts", (req, res) =>{
     ]);
 });
 
+app.use(cors({
+    origin : "*",
+    credentials : false,
+}));
 app.use("/post",postRouter);
 app.use("/user",userRouter);
 

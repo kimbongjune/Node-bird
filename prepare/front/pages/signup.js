@@ -1,11 +1,12 @@
 import Applayout from './../components/Applayout';
 import Head from "next/head";
 import {Form, Input, Checkbox ,Button} from "antd";
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import useInput from '../hooks/useinput';
 import styled from "styled-components";
 import { SIGN_UP_REQUEST } from '../reducers/user';
 import { useDispatch, useSelector } from 'react-redux';
+import  Router  from 'next/router';
 
 const ErrorMessage = styled.div`
     color:red;
@@ -13,7 +14,19 @@ const ErrorMessage = styled.div`
 
 const Signup = () =>{
     const dispatch = useDispatch();
-    const { signUpLoading } = useSelector((state) => state.user);
+    const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+
+    useEffect(() =>{
+        if(signUpDone){
+            Router.push("/")
+        }
+    }, [signUpDone]);
+
+    useEffect(() =>{
+        if(signUpError){
+            alert(signUpError);
+        }
+    }, [signUpError]);
     const [email, onChangeEmail] = useInput("");
     const [nickname, onChangenickname] = useInput("");
     const [password, onChangePassword] = useInput("");
@@ -65,7 +78,7 @@ const Signup = () =>{
                 <div>
                     <label htmlFor='user-password'>비밀번호</label>
                     <br/>
-                    <Input name="user-password" value={password} required onChange={onChangePassword}></Input>
+                    <Input type="password" name="user-password" value={password} required onChange={onChangePassword}></Input>
                 </div>
                 <div>
                     <label htmlFor='user-password-check'>비밀번호체크</label>

@@ -19,6 +19,7 @@ router.post("/", async (req, res, next) =>{
             nickname : req.body.nickname,
             password : hashPassword,
         });
+        //res.setHeader("Acess-Control-Allow-Origin", "*");
         res.status(200).send("ok");
     }catch(error){
         console.error(error);
