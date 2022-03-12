@@ -1,7 +1,10 @@
 import {all, fork, call, put, take, takeEvery, takeLatest, throttle, delay} from "redux-saga/effects"
+import axios from "axios";
 
 import postSaga from "./post";
 import userSaga from "./user";
+
+axios.defaults.baseURL = "http://localhost:3060";
 
 
 

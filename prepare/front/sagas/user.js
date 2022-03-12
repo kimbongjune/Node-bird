@@ -3,18 +3,17 @@ import axios from "axios";
 import { FOLLOW_FAILURE, FOLLOW_REQUEST, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, UNFOLLOW_SUCCESS } from "../reducers/user";
 import { UNFOLLOW_REQUEST, FOLLOW_SUCCESS, UNFOLLOW_FAILURE } from './../reducers/user';
 
+
 function logInAPI(data){
-    return axios.post("/api/login", data);
+    return axios.post("/user/login", data);
 }
 
 function* logIn(action){
     try {
-        //const result = yield call(logInAPI, action.data);
-        yield delay(1000);
+        const result = yield call(logInAPI, action.data);
         yield put({
             type : LOG_IN_SUCCESS,
-            //data : result.data,
-            data : action.data,
+            data : result.data,
         });
     } catch (err) {
         yield put({
@@ -25,7 +24,7 @@ function* logIn(action){
 }
 
 function logOutAPI(){
-    return axios.post("/api/logout");
+    return axios.post("/logout");
 }
 
 function* logOut(){
@@ -44,7 +43,7 @@ function* logOut(){
 }
 
 function signUpAPI(data){
-    return axios.post("http://localhost:3060/user", data);
+    return axios.post("/user", data);
 }
 
 function* signUp(action){
@@ -72,8 +71,7 @@ function* follow(action){
         yield delay(1000);
         yield put({
             type : FOLLOW_SUCCESS,
-            //data : result.data,
-            data : action.data,
+            data : result.data,
         });
     } catch (err) {
         yield put({
