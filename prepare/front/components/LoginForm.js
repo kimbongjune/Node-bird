@@ -6,6 +6,7 @@ import { PropTypes } from 'prop-types';
 import useInput from "../hooks/useinput";
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAction, loginRequestAction } from "../reducers/user";
+import { useEffect } from 'react';
 
 const ButtonWrapper = styled.div`
     margin-top : 10px;
@@ -19,8 +20,14 @@ const Loginform = () =>{
     const dispatch = useDispatch();
     const [email, onChangeEmail] = useInput("");
     const [password, onChangePassword] = useInput("");
-    const {logInLoading} = useSelector((state)=>state.user)
-    
+    const {logInLoading, logInError} = useSelector((state)=>state.user)
+
+    useEffect(() => {
+        if(logInError){
+            alert(logInError);
+        }
+    } ,[logInError])
+
     const onSubmitForm = useCallback(() =>{
         console.log(email,password);
         dispatch(loginRequestAction({email, password}));

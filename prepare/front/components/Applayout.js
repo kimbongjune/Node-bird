@@ -28,6 +28,7 @@ const SearchInput = styled(Input.Search)`
 
 const Applayout = ({children}) =>{
     const { me } = useSelector((state) => state.user);
+    console.log(me);
     return(
         <div>
             <Global/>

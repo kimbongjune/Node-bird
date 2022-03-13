@@ -61,7 +61,6 @@ export const loginRequestAction =(data) => {
 export const logoutRequestAction =() => {
     return{
         type : LOG_OUT_REQUEST,
-        data,
     }
 };
 
@@ -113,7 +112,7 @@ const reducer = (state = initialState, action) =>{
             case LOG_IN_SUCCESS:
                 draft.logInLoading = false;
                 draft.logInDone = true;
-                draft.me = dummyUser(action.data);
+                draft.me = action.data;
                 break;
             case LOG_IN_FAILURE:
                 draft.logInLoading = false;
@@ -127,6 +126,7 @@ const reducer = (state = initialState, action) =>{
             case LOG_OUT_SUCCESS:
                 draft.logOutLoading = false;
                 draft.logOutDone = true;
+                draft.me = null;
                 break;
             case LOG_OUT_FAILURE:
                 draft.logOutLoading = false;
