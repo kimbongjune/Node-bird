@@ -23,9 +23,9 @@ const CommentForm = ({post}) =>{
         dispatch({
             type : ADD_COMMENT_REQUEST,
             data : {
-            content : commentText,
-            postId : post.id,
-            userId : id,
+                content : commentText,
+                postId : post.id,
+                userId : id,
             },
         });
     }, [commentText, id]);

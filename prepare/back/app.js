@@ -17,11 +17,14 @@ db.sequelize.sync()
         console.log("db 연결 성공");
     })
     .catch(console.error);
+
 passportConfig();
+
 app.use(cors({
-    origin : "*",
-    credentials : false,
+    origin : true,
+    credentials : true,
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended : true }));
 app.use(cookireParser(process.env.COOKIE_SECRET));
@@ -30,6 +33,7 @@ app.use(session({
     resave : false,
     secret : process.env.COOKIE_SECRET
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
