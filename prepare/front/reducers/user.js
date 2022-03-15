@@ -1,6 +1,9 @@
 import produce from "immer";
 
 export const initialState = {
+    loadUserLoading : false,
+    loadUserDone : false,
+    loadUserError : null,
     followLoading : false,
     followDone : false,
     followError : null,
@@ -23,6 +26,10 @@ export const initialState = {
     signUpData : {},
     loginData : {},
 }
+
+export const LOAD_USER_REQUEST = "LOAD_USER_REQUEST";
+export const LOAD_USER_SUCCESS = "LOAD_USER_SUCCESS";
+export const LOAD_USER_FAILURE = "LOAD_USER_FAILURE";
 
 export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
 export const LOG_IN_SUCCESS = "LOG_IN_SUCCESS";
@@ -76,6 +83,20 @@ const dummyUser = (data) =>({
 const reducer = (state = initialState, action) =>{
     return produce(state, (draft) =>{
         switch(action.type){
+            case LOAD_USER_REQUEST:
+                draft.loadUserLoading = true;
+                draft.loadUserDone = false;
+                draft.loadUserError = null;
+                break;
+            case LOAD_USER_SUCCESS:
+                draft.loadUserLoading = false;
+                draft.loadUserDone = true;
+                draft.me = action.data;
+                break;
+            case LOAD_USER_FAILURE:
+                draft.loadUserLoading = false;
+                draft.followError = action.error;
+                break;
             case FOLLOW_REQUEST:
                 draft.followLoading = true;
                 draft.followDone = false;
