@@ -32,11 +32,12 @@ const Home = () =>{
                 }
             }
         }
+        console.log(hasMorePost, loadPostLoading);
         window.addEventListener("scroll", onScroll);
         return () =>{
             window.removeEventListener("scroll", onScroll);
         };
-    }, [hasMorePost, loadPostLoading])
+    }, [])
 
     
     return(

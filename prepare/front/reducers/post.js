@@ -20,25 +20,6 @@ export const initialState = {
     addCommentError : null,
 };
 
-export const generateDummyPost = (number) => Array(number).fill().map(() =>({
-    id : shortId.generate(),
-    User :{
-        id : shortId.generate(),
-        nickname : faker.name.findName()
-    },
-    content: faker.lorem.paragraph(),
-    Images : [{
-        src : faker.image.image(),
-    }],
-    Comments : [{
-        User :{
-            id : shortId.generate(),
-            nickname : faker.name.findName(),
-        },
-        content: faker.lorem.sentence(),
-    }],
-}))
-
 export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
 export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
 export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
@@ -79,7 +60,7 @@ const reducer = (state = initialState, action) =>{
                 draft.loadPostLoading = false;
                 draft.loadPostDone = true;
                 draft.mainPosts = action.data.concat(draft.mainPosts);
-                draft.hasMorePost = draft.mainPosts.length < 50;
+                draft.hasMorePost = false;
                 break;
             case LOAD_POST_FAILURE:
                 draft.loadPostLoading = false;
