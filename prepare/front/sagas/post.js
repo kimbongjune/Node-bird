@@ -1,9 +1,9 @@
 import {all, fork, call, put, take, takeEvery, takeLatest, throttle, delay} from "redux-saga/effects"
 import axios from "axios";
-import { ADD_COMMENT_SUCCESS, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, REMOVE_POST_SUCCESS, LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE, generateDummyPost } from "../reducers/post";
+import { ADD_COMMENT_SUCCESS, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, REMOVE_POST_SUCCESS, LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE, generateDummyPost, LIKE_POST_REQUEST, LIKE_POST_FAILURE, UNLIKE_POST_SUCCESS } from "../reducers/post";
 import { ADD_POST_TO_ME } from "../reducers/user";
 import shortId from "shortid";
-import { REMOVE_POST_REQUEST, REMOVE_POST_FAILURE } from './../reducers/post';
+import { REMOVE_POST_REQUEST, REMOVE_POST_FAILURE, UNLIKE_POST_REQUEST, LIKE_POST_SUCCESS, UNLIKE_POST_FAILURE } from './../reducers/post';
 import { REMOVE_POST_OF_ME } from './../reducers/user';
 
 function removePostAPI(data){
@@ -93,6 +93,54 @@ function* addComment(action){
     }
 }
 
+function unlikePostAPI(data){
+    return axios.delete(`/post/${data}/like`);
+}
+
+function* unlikePost(action){
+    try {
+        const result = yield call(unlikePostAPI, action.data);
+        yield put({
+            type : UNLIKE_POST_SUCCESS,
+            data : result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type : UNLIKE_POST_FAILURE,
+            error : err.response.data,
+        });
+    }
+}
+
+function likePostAPI(data){
+    return axios.patch(`/post/${data}/like`);
+}
+
+function* likePost(action){
+    try {
+        const result = yield call(likePostAPI, action.data);
+        yield put({
+            type : LIKE_POST_SUCCESS,
+            data : result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type : LIKE_POST_FAILURE,
+            error : err.response.data,
+        });
+    }
+}
+
+function* watchLikePost(){
+    yield takeLatest(LIKE_POST_REQUEST, likePost);
+}
+
+function* watchUnlikePost(){
+    yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);
+}
+
 function* watchAddPost(){
     yield takeEvery(ADD_POST_REQUEST, addPost);
 }
@@ -113,6 +161,8 @@ function* watchAddComment(){
 export default function* postSaga(){
 
     yield all([
+        fork(watchLikePost),
+        fork(watchUnlikePost),
         fork(watchAddPost),
         fork(watchLoadPost),
         fork(watchRemovePost),
