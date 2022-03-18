@@ -6,10 +6,6 @@ import shortId from "shortid";
 import { REMOVE_POST_REQUEST, REMOVE_POST_FAILURE, UNLIKE_POST_REQUEST, LIKE_POST_SUCCESS, UNLIKE_POST_FAILURE } from './../reducers/post';
 import { REMOVE_POST_OF_ME } from './../reducers/user';
 
-function removePostAPI(data){
-    return axios.post("/api/removepost", data);
-}
-
 function addPostAPI(data){
     return axios.post("/post", { content : data});
 }
@@ -51,21 +47,23 @@ function* loadPost(action){
     }
 }
 
+function removePostAPI(data){
+    return axios.delete(`/post/${data}`);
+}
+
 function* removePost(action){
     try {
-        //const result = yield call(removePostAPI, action.data);
-        yield delay(1000);
-        const id = shortId.generate();
+        const result = yield call(removePostAPI, action.data);
         yield put({
             type : REMOVE_POST_SUCCESS,
-            //data : result.data,
-            data : action.data,
+            data : result.data,
         });
         yield put({
             type : REMOVE_POST_OF_ME,
             data : action.data,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type : REMOVE_POST_FAILURE,
             error : err.response.data,

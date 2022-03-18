@@ -1,7 +1,7 @@
 import {all, fork, call, put, take, takeEvery, takeLatest, throttle, delay} from "redux-saga/effects"
 import axios from "axios";
-import { FOLLOW_FAILURE, FOLLOW_REQUEST, LOAD_USER_FAILURE, LOAD_USER_REQUEST, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, UNFOLLOW_SUCCESS } from "../reducers/user";
-import { UNFOLLOW_REQUEST, FOLLOW_SUCCESS, UNFOLLOW_FAILURE, LOAD_USER_SUCCESS } from './../reducers/user';
+import { CHANGE_NICKNAME_FAILURE, CHANGE_NICKNAME_REQUEST, FOLLOW_FAILURE, FOLLOW_REQUEST, LOAD_USER_FAILURE, LOAD_USER_REQUEST, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, UNFOLLOW_SUCCESS } from "../reducers/user";
+import { UNFOLLOW_REQUEST, FOLLOW_SUCCESS, UNFOLLOW_FAILURE, LOAD_USER_SUCCESS, CHANGE_NICKNAME_SUCCESS } from './../reducers/user';
 
 
 function logInAPI(data){
@@ -34,6 +34,7 @@ function* logOut(){
             type : LOG_OUT_SUCCESS,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type : LOG_OUT_FAILURE,
             error : err.response.data,
@@ -120,6 +121,27 @@ function* loadUser(action){
     }
 }
 
+function changeNicknameAPI(data){
+    return axios.patch("/user/nickname",{nickname : data});
+}
+
+function* changeNickname(action){
+    try {
+        const result = yield call(changeNicknameAPI, action.data);
+        yield put({
+            type : CHANGE_NICKNAME_SUCCESS,
+            data : result.data,
+        });
+    } catch (err) {
+        yield put({
+            type : CHANGE_NICKNAME_FAILURE,
+            error : err.response.data,
+        });
+    }
+}
+
+
+
 function* watchLoadUser(){
     yield takeEvery(LOAD_USER_REQUEST, loadUser);
 }
@@ -143,9 +165,14 @@ function* watchLogout(){
 function* watchSignUp(){
     yield takeEvery(SIGN_UP_REQUEST, signUp);
 }
+
+function* watchChangeNickname(){
+    yield takeEvery(CHANGE_NICKNAME_REQUEST, changeNickname);
+}
 export default function* userSaga(){
 
     yield all([
+        fork(watchChangeNickname),
         fork(watchLoadUser),
         fork(watchFollow),
         fork(watchUnFollow),
