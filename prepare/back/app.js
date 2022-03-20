@@ -12,6 +12,7 @@ const passport = require("passport");
 const session = require("express-session");
 const cookireParser = require("cookie-parser");
 const dotenv = require("dotenv");
+const path = require("path");
 
 dotenv.config();
 const app = express();
@@ -30,6 +31,7 @@ app.use(cors({
     credentials : true,
 }));
 
+app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(express.urlencoded({ extended : true }));
 app.use(cookireParser(process.env.COOKIE_SECRET));

@@ -1,13 +1,13 @@
 import {all, fork, call, put, take, takeEvery, takeLatest, throttle, delay} from "redux-saga/effects"
 import axios from "axios";
-import { ADD_COMMENT_SUCCESS, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, REMOVE_POST_SUCCESS, LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE, generateDummyPost, LIKE_POST_REQUEST, LIKE_POST_FAILURE, UNLIKE_POST_SUCCESS } from "../reducers/post";
+import { ADD_COMMENT_SUCCESS, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_COMMENT_FAILURE, ADD_COMMENT_REQUEST, REMOVE_POST_SUCCESS, LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE, generateDummyPost, LIKE_POST_REQUEST, LIKE_POST_FAILURE, UNLIKE_POST_SUCCESS, UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_FAILURE } from "../reducers/post";
 import { ADD_POST_TO_ME } from "../reducers/user";
 import shortId from "shortid";
-import { REMOVE_POST_REQUEST, REMOVE_POST_FAILURE, UNLIKE_POST_REQUEST, LIKE_POST_SUCCESS, UNLIKE_POST_FAILURE } from './../reducers/post';
+import { REMOVE_POST_REQUEST, REMOVE_POST_FAILURE, UNLIKE_POST_REQUEST, LIKE_POST_SUCCESS, UNLIKE_POST_FAILURE, UPLOAD_IMAGES_SUCCESS } from './../reducers/post';
 import { REMOVE_POST_OF_ME } from './../reducers/user';
 
 function addPostAPI(data){
-    return axios.post("/post", { content : data});
+    return axios.post("/post", data);
 }
 
 function* addPost(action){
@@ -131,6 +131,26 @@ function* likePost(action){
     }
 }
 
+function uploadImagesAPI(data){
+    return axios.post(`/post/images`, data);
+}
+
+function* uploadImages(action){
+    try {
+        const result = yield call(uploadImagesAPI, action.data);
+        yield put({
+            type : UPLOAD_IMAGES_SUCCESS,
+            data : result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type : UPLOAD_IMAGES_FAILURE,
+            error : err.response.data,
+        });
+    }
+}
+
 function* watchLikePost(){
     yield takeLatest(LIKE_POST_REQUEST, likePost);
 }
@@ -156,9 +176,14 @@ function* watchAddComment(){
     yield takeEvery(ADD_COMMENT_REQUEST, addComment);
 }
 
+function* watchUploadImages(){
+    yield takeEvery(UPLOAD_IMAGES_REQUEST, uploadImages);
+}
+
 export default function* postSaga(){
 
     yield all([
+        fork(watchUploadImages),
         fork(watchLikePost),
         fork(watchUnlikePost),
         fork(watchAddPost),
